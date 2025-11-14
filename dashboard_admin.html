@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SFD Admin - Dashboard</title>
+    <link rel="icon" href="https://ipch.net.pe/wp-content/uploads/2025/07/IPCH-VERTICAL-V1-COLOR.png" sizes="any">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Hoja de Estilos Personalizada -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Font Awesome (para iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 font-sans">
+    
+    <!-- Contenedor principal -->
+    <div class="flex h-screen bg-gray-100">
+        
+        <!-- Barra Lateral -->
+        <aside class="w-64 bg-white shadow-md hidden sm:block">
+            <div class="p-6 flex items-center justify-center">
+                <img src="https://ipch.net.pe/wp-content/uploads/2025/07/IPCH-VERTICAL-V1-COLOR.png" alt="Logo IPCH" class="h-20 w-auto">
+            </div>
+            
+            <nav class="mt-6">
+                <a href="#aulas" class="nav-link flex items-center py-3 px-6 text-gray-700 hover:bg-red-50 hover:text-red-700">
+                    <i class="fas fa-school w-6 text-center"></i>
+                    <span class="ml-3">Aulas</span>
+                </a>
+                <a href="#docentes" class="nav-link flex items-center py-3 px-6 text-gray-700 hover:bg-red-50 hover:text-red-700">
+                    <i class="fas fa-chalkboard-teacher w-6 text-center"></i>
+                    <span class="ml-3">Docentes</span>
+                </a>
+                <a href="#colaboradores" class="nav-link flex items-center py-3 px-6 text-gray-700 hover:bg-red-50 hover:text-red-700">
+                    <i class="fas fa-users w-6 text-center"></i>
+                    <span class="ml-3">Colaboradores</span>
+                </a>
+                
+                <hr class="my-4 border-t border-gray-200">
+                
+                <a href="#novedades" class="nav-link flex items-center py-3 px-6 text-gray-700 hover:bg-red-50 hover:text-red-700">
+                    <i class="fas fa-exclamation-triangle w-6 text-center"></i>
+                    <span class="ml-3">Novedades</span>
+                </a>
+                <a href="#generar-encuesta" class="nav-link flex items-center py-3 px-6 text-gray-700 hover:bg-red-50 hover:text-red-700">
+                    <i class="fas fa-link w-6 text-center"></i>
+                    <span class="ml-3">Generar Encuesta</span>
+                </a>
+                <a href="#evaluacion-calidad" class="nav-link flex items-center py-3 px-6 text-gray-700 hover:bg-red-50 hover:text-red-700">
+                    <i class="fas fa-star w-6 text-center"></i>
+                    <span class="ml-3">Evaluación Calidad</span>
+                </a>
+                <a href="#analisis-docentes" class="nav-link flex items-center py-3 px-6 text-gray-700 hover:bg-red-50 hover:text-red-700">
+    <i class="fas fa-chart-line w-6 text-center"></i>
+    <span class="ml-3">Análisis de Docentes</span>
+</a>
+            </nav>
+            
+<div class="absolute bottom-0 w-64 p-6">
+    <!-- Fecha y Hora de Perú -->
+    <div class="text-xs text-gray-500 mb-2" id="peru-datetime">
+        <div id="peru-date">Cargando fecha...</div>
+        <div id="peru-time" class="font-mono">Cargando hora...</div>
+    </div>
+    
+    <!-- Nombre del Usuario -->
+    <div class="text-sm font-medium text-gray-800" id="user-name-display">Cargando...</div>
+    <div class="text-xs text-gray-500" id="user-role-display"></div>
+    
+    <button id="logout-button" class="btn btn-secondary w-full mt-3">
+        Cerrar Sesión
+    </button>
+</div>
+        </aside>
+        
+        <!-- Contenido Principal -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            
+            <!-- Área de Contenido (scrollable) -->
+            <div class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+                
+                <!-- SECCIÓN: AULAS -->
+                <section id="aulas-section" class="app-section hidden">
+                    
+                    <!-- Botón para mostrar formulario -->
+                    <div class="flex justify-end mb-4">
+                        <button id="show-aula-form-button" class="btn btn-primary">
+                            <i class="fas fa-plus mr-2"></i> Registrar Nueva Aula
+                        </button>
+                    </div>
+
+                    <!-- Formulario de Nueva Aula (Oculto por defecto) -->
+                    <div id="new-aula-form-container" class="card p-6 md:p-8 mb-6 hidden">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-6">Datos de la Nueva Aula</h2>
+                        <form id="new-aula-form">
+                            <!-- Fila 1 -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                                <div>
+                                    <label for="codigo_aula" class="form-label">Código de Aula</label>
+                                    <input type="text" id="codigo_aula" name="codigo_aula" placeholder="Ej: CH-GRL-01">
+                                </div>
+                                <div>
+                                    <label for="programa_select" class="form-label">Programa</label>
+                                    <select id="programa_select" name="programa_select"></select>
+                                </div>
+                                <div>
+                                    <label for="ciclo_actual_select" class="form-label">Ciclo Actual</label>
+                                    <select id="ciclo_actual_select" name="ciclo_actual_select"></select>
+                                </div>
+                            </div>
+                            <!-- Fila 2 -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <label for="id_docente_asignado" class="form-label">Docente Asignado</label>
+                                    <select id="id_docente_asignado" name="id_docente_asignado"></select>
+                                </div>
+                                <div>
+                                    <label for="total_sesiones" class="form-label">Total Sesiones</label>
+                                    <input type="number" id="total_sesiones" name="total_sesiones" readonly>
+                                </div>
+                            </div>
+                            <!-- Fila 3 - Frecuencia -->
+                            <div class="mb-6">
+                                <label class="form-label">Frecuencia</label>
+                                <div id="frecuencia_container" class="flex flex-wrap gap-4 mt-2">
+                                    <div class="text-sm text-gray-500">-- Elige un programa para ver frecuencias --</div>
+                                </div>
+                            </div>
+                            <!-- Fila 4 - Fechas y Horas -->
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                                <div>
+                                    <label for="fecha_inicio" class="form-label">Fecha Inicio</label>
+                                    <input type="date" id="fecha_inicio" name="fecha_inicio">
+                                </div>
+                                <div>
+                                    <label for="horario_inicio" class="form-label">Hora Inicio</label>
+                                    <input type="time" id="horario_inicio" name="horario_inicio">
+                                </div>
+                                <div>
+                                    <label for="horario_fin" class="form-label">Hora Fin</label>
+                                    <input type="time" id="horario_fin" name="horario_fin">
+                                </div>
+                            </div>
+                            
+                            <!-- Botones y Error -->
+                            <div class="flex items-center justify-end gap-4 mt-8">
+                                <p id="form-aula-error" class="text-sm text-red-600 mr-auto"></p>
+                                <button type="button" id="cancel-aula-form-button" class="btn btn-secondary">Cancelar</button>
+                                <button type="submit" id="save-aula-button" class="btn btn-primary">Guardar Aula</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Tabla de Aulas Registradas -->
+<div class="card overflow-hidden">
+    <div class="overflow-x-auto">
+        <div id="aulas-table-container" class="min-w-max">
+            <p class="p-6 text-center text-gray-500">Cargando aulas...</p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Editar Aula -->
+                    <div id="edit-aula-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                        <div class="relative top-20 mx-auto p-5 border w-full max-w-lg shadow-lg rounded-md bg-white">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-xl font-semibold">Editar Aula</h3>
+                                <button type="button" class="btn-secondary text-gray-400 hover:text-gray-600 text-2xl leading-none px-3 py-1" onclick="document.getElementById('edit-aula-modal').classList.add('hidden')">&times;</button>
+                            </div>
+                            <form id="edit-aula-form">
+                                <input type="hidden" id="edit-aula-id">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label for="edit_aula_codigo" class="form-label">Código de Aula</label>
+                                        <input type="text" id="edit_aula_codigo" name="edit_aula_codigo" required>
+                                    </div>
+                                    <div>
+                                        <label for="edit_aula_docente" class="form-label">Docente Asignado</label>
+                                        <select id="edit_aula_docente" name="edit_aula_docente" required></select>
+                                    </div>
+                                    <div>
+                                        <label for="edit_aula_horario_inicio" class="form-label">Hora Inicio</label>
+                                        <input type="time" id="edit_aula_horario_inicio" name="edit_aula_horario_inicio" required>
+                                    </div>
+                                    <div>
+                                        <label for="edit_aula_horario_fin" class="form-label">Hora Fin</label>
+                                        <input type="time" id="edit_aula_horario_fin" name="edit_aula_horario_fin" required>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-end gap-4 mt-8">
+                                    <p id="edit-aula-error" class="text-sm text-red-600 mr-auto"></p>
+                                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('edit-aula-modal').classList.add('hidden')">Cancelar</button>
+                                    <button type="submit" id="save-edit-aula-button" class="btn btn-primary">Guardar Cambios</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- SECCIÓN: DOCENTES -->
+                <section id="docentes-section" class="app-section hidden">
+                    
+                    <div class="flex justify-end mb-4">
+                        <button id="show-docente-form-button" class="btn btn-primary">
+                            <i class="fas fa-plus mr-2"></i> Registrar Nuevo Docente
+                        </button>
+                    </div>
+
+                    <div id="new-docente-form-container" class="card p-6 md:p-8 mb-6 hidden">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-6">Datos del Nuevo Docente</h2>
+                        <form id="new-docente-form">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <label for="docente_nombre_completo" class="form-label">Nombre Completo</label>
+                                    <input type="text" id="docente_nombre_completo" name="docente_nombre_completo">
+                                </div>
+                                <div>
+                                    <label for="docente_email" class="form-label">Email (Contacto)</label>
+                                    <input type="email" id="docente_email" name="docente_email">
+                                </div>
+                            </div>
+                            
+                            <!-- (MODIFICADO) Lógica para DNI y crear login de docente -->
+                            <div class="p-4 bg-gray-50 rounded-md border">
+                                <div class_mb-4>
+                                    <label for="docente_dni" class="form-label">DNI (Obligatorio para login)</label>
+                                    <input type="text" id="docente_dni" name="docente_dni" maxlength="8">
+                                </div>
+
+                                <label class="flex items-center space-x-3 mt-4">
+                                    <input type="checkbox" id="docente_crear_login" class="h-5 w-5 rounded text-red-600 focus:ring-red-500">
+                                    <span class="text-sm font-medium text-gray-700">Crear cuenta de acceso (login) para este docente</span>
+                                </label>
+                                <p class="text-xs text-gray-500 mt-1">El DNI se usará como usuario. El email de contacto se vinculará a la cuenta.</p>
+                                
+                                <div id="docente_password_fields" class="hidden mt-4 space-y-4">
+                                    <div>
+                                        <label for="docente_password" class="form-label">Contraseña (mín. 6 caracteres)</label>
+                                        <input type="password" id="docente_password" name="docente_password">
+                                    </div>
+                                    <div>
+                                        <label for="docente_confirm_password" class="form-label">Confirmar Contraseña</label>
+                                        <input type="password" id="docente_confirm_password" name="docente_confirm_password">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-end gap-4 mt-8">
+                                <p id="form-docente-error" class="text-sm text-red-600 mr-auto"></p>
+                                <button type="button" id="cancel-docente-form-button" class="btn btn-secondary">Cancelar</button>
+                                <button type="submit" id="save-docente-button" class="btn btn-primary">Guardar Docente</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card overflow-hidden">
+                        <div id="docentes-table-container">
+                            <p class="p-6 text-center text-gray-500">Cargando docentes...</p>
+                        </div>
+                    </div>
+
+                    <!-- Modal para Editar Docente -->
+                    <div id="edit-docente-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                        <div class="relative top-20 mx-auto p-5 border w-full max-w-lg shadow-lg rounded-md bg-white">
+                            <h3 class="text-xl font-semibold mb-4">Editar Docente</h3>
+                            <form id="edit-docente-form">
+                                <input type="hidden" id="edit-docente-id">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label for="edit_docente_nombre" class="form-label">Nombre Completo</label>
+                                        <input type="text" id="edit_docente_nombre" name="edit_docente_nombre">
+                                    </div>
+                                    <div>
+                                        <label for="edit_docente_email" class="form-label">Email (Contacto)</label>
+                                        <input type="email" id="edit_docente_email" name="edit_docente_email">
+                                    </div>
+                                    <div>
+                                        <label for="edit_docente_dni" class="form-label">DNI</label>
+                                        <input type="text" id="edit_docente_dni" name="edit_docente_dni" maxlength="8">
+                                    </div>
+                                    <p class="text-sm text-gray-500">El email de login no se puede cambiar desde aquí.</p>
+                                </div>
+                                <div class="flex items-center justify-end gap-4 mt-8">
+                                    <p id="edit-docente-error" class="text-sm text-red-600 mr-auto"></p>
+                                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('edit-docente-modal').classList.add('hidden')">Cancelar</button>
+                                    <button type="submit" id="save-edit-docente-button" class="btn btn-primary">Guardar Cambios</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- SECCIÓN: COLABORADORES -->
+                <section id="colaboradores-section" class="app-section hidden">
+                    
+                    <div class="flex justify-end mb-4">
+                        <button id="show-colaborador-form-button" class="btn btn-primary">
+                            <i class="fas fa-plus mr-2"></i> Registrar Nuevo Colaborador
+                        </button>
+                    </div>
+
+                    <div id="new-colaborador-form-container" class="card p-6 md:p-8 mb-6 hidden">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-6">Datos del Nuevo Colaborador</h2>
+                        <form id="new-colaborador-form">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <label for="colaborador_nombre" class="form-label">Nombre Completo</label>
+                                    <input type="text" id="colaborador_nombre" name="colaborador_nombre">
+                                </div>
+                                <div>
+                                    <label for="colaborador_email" class="form-label">Email (Será su usuario)</label>
+                                    <input type="email" id="colaborador_email" name="colaborador_email">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <label for="colaborador_password" class="form-label">Contraseña (mín. 6 caracteres)</label>
+                                    <input type="password" id="colaborador_password" name="colaborador_password">
+                                </div>
+                                <div>
+                                    <label for="colaborador_rol" class="form-label">Rol de Acceso</label>
+<select id="colaborador_rol" name="colaborador_rol">
+    <option value="admin">Administrador</option>
+    <option value="calidad">Calidad</option>
+    <option value="academico">Académico</option>
+    <option value="administrativo">Administrativo</option>
+    <option value="presidencia">Presidencia</option>
+</select>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-end gap-4 mt-8">
+                                <p id="form-colaborador-error" class="text-sm text-red-600 mr-auto"></p>
+                                <button type="button" id="cancel-colaborador-form-button" class="btn btn-secondary">Cancelar</button>
+                                <button type="submit" id="save-colaborador-button" class="btn btn-primary">Crear Colaborador</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card overflow-hidden">
+                        <div id="colaboradores-table-container">
+                            <p class="p-6 text-center text-gray-500">Cargando colaboradores...</p>
+                        </div>
+                    </div>
+
+                    <!-- Modal para Editar Colaborador -->
+                    <div id="edit-colaborador-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                        <div class="relative top-20 mx-auto p-5 border w-full max-w-lg shadow-lg rounded-md bg-white">
+                            <h3 class="text-xl font-semibold mb-4">Editar Colaborador</h3>
+                            <form id="edit-colaborador-form">
+                                <input type="hidden" id="edit-colaborador-id">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label for="edit_colaborador_nombre" class="form-label">Nombre Completo</label>
+                                        <input type="text" id="edit_colaborador_nombre" name="edit_colaborador_nombre">
+                                    </div>
+                                    <div>
+                                        <label for="edit_colaborador_email" class="form-label">Email (No editable)</label>
+                                        <input type="email" id="edit_colaborador_email" name="edit_colaborador_email" readonly>
+                                    </div>
+                                    <div>
+                                        <label for="edit_colaborador_rol" class="form-label">Rol de Acceso</label>
+<select id="edit_colaborador_rol" name="edit_colaborador_rol">
+    <option value="admin">Administrador</option>
+    <option value="calidad">Calidad</option>
+    <option value="academico">Académico</option>
+    <option value="administrativo">Administrativo</option>
+    <option value="presidencia">Presidencia</option>
+</select>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-end gap-4 mt-8">
+                                    <p id="edit-colaborador-error" class="text-sm text-red-600 mr-auto"></p>
+                                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('edit-colaborador-modal').classList.add('hidden')">Cancelar</button>
+                                    <button type="submit" id="save-edit-colaborador-button" class="btn btn-primary">Guardar Cambios</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+                
+<!-- SECCIÓN: NOVEDADES (Etapa 4) -->
+<section id="novedades-section" class="app-section hidden">
+    
+    <div class="flex justify-end mb-4">
+        <button id="show-novedad-form-button" class="btn btn-primary">
+            <i class="fas fa-plus mr-2"></i> Registrar Novedad
+        </button>
+    </div>
+
+    <div id="new-novedad-form-container" class="card p-6 md:p-8 mb-6 hidden">
+        <h2 class="text-xl font-semibold text-gray-800 mb-6">Registrar Novedad de Clase</h2>
+        <form id="new-novedad-form">
+            <!-- Paso 1: Tipo de Novedad -->
+            <div>
+                <label class="form-label">1. Tipo de Novedad</label>
+                <fieldset class="flex flex-wrap gap-4 mt-2">
+                    <div>
+                        <input type="radio" name="tipo_novedad_radio" id="tipo_reemplazo" value="reemplazo" class="freq-radio-input">
+                        <label for="tipo_reemplazo" class="freq-radio-label">Reemplazo de Docente</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="tipo_novedad_radio" id="tipo_reprogramacion" value="reprogramacion" class="freq-radio-input">
+                        <label for="tipo_reprogramacion" class="freq-radio-label">Reprogramación de Clase</label>
+                    </div>
+                </fieldset>
+            </div>
+            
+            <!-- Paso 2: Aula y Sesión -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div>
+                    <label for="novedad_aula_select" class="form-label">2. Aula Afectada</label>
+                    <select id="novedad_aula_select" name="novedad_aula_select"></select>
+                </div>
+                <div>
+                    <label for="novedad_sesion_select" class="form-label">3. Sesión Afectada</label>
+                    <select id="novedad_sesion_select" name="novedad_sesion_select"></select>
+                </div>
+            </div>
+
+            <!-- Paso 3: Campos Dinámicos -->
+            <div id="novedad_reemplazo_container" class="mt-6 hidden">
+                <label for="novedad_docente_reemplazo" class="form-label">4. Docente de Reemplazo</label>
+                <select id="novedad_docente_reemplazo" name="novedad_docente_reemplazo"></select>
+            </div>
+            
+            <div id="novedad_reprogramar_container" class="mt-6 hidden">
+                <label for="novedad_nueva_fecha" class="form-label">4. Nueva Fecha para la Sesión</label>
+                <input type="date" id="novedad_nueva_fecha" name="novedad_nueva_fecha">
+            </div>
+
+            <!-- Paso 4: Motivo -->
+            <div class="mt-6">
+                <label for="novedad_motivo" class="form-label">5. Motivo de la Novedad</label>
+                <textarea id="novedad_motivo" name="novedad_motivo" rows="3" placeholder="Ej: El docente se reportó enfermo..."></textarea>
+            </div>
+            
+            <!-- Botones y Error -->
+            <div class="flex items-center justify-end gap-4 mt-8">
+                <p id="form-novedad-error" class="text-sm text-red-600 mr-auto"></p>
+                <button type="button" id="cancel-novedad-form-button" class="btn btn-secondary">Cancelar</button>
+                <button type="submit" id="save-novedad-button" class="btn btn-primary">Guardar Novedad</button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- ✅ NUEVO: Filtros -->
+    <div class="card mb-4">
+        <div class="flex flex-wrap items-center gap-4">
+            <div class="flex-1 min-w-[200px]">
+                <label for="filtro-fecha-novedades" class="block text-sm font-medium text-gray-700 mb-2">
+                    Filtrar por fecha
+                </label>
+                <input type="date" id="filtro-fecha-novedades" class="w-full">
+            </div>
+            
+            <div class="flex-1 min-w-[200px]">
+                <label for="filtro-aula-novedades" class="block text-sm font-medium text-gray-700 mb-2">
+                    Filtrar por aula
+                </label>
+                <select id="filtro-aula-novedades" class="w-full">
+                    <option value="">Todas las aulas</option>
+                </select>
+            </div>
+            
+            <div class="flex items-end">
+                <button id="reset-filtros-novedades" class="btn btn-secondary">
+                    <i class="fas fa-redo mr-2"></i> Limpiar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Título -->
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Historial de Novedades</h3>
+    
+    <!-- Tabla -->
+    <div class="card overflow-hidden mb-6">
+        <div class="overflow-x-auto">
+            <div id="novedades-table-container">
+                <p class="p-6 text-center text-gray-500">Cargando novedades...</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ✅ NUEVO: Controles de Paginación -->
+    <div id="novedades-paginacion-container" class="hidden card">
+        <div class="flex items-center justify-between">
+            <div class="text-sm text-gray-600">
+                Mostrando <span id="novedades-inicio">1</span>-<span id="novedades-fin">20</span> 
+                de <span id="novedades-total">0</span> novedades
+            </div>
+            
+            <div class="flex gap-2">
+                <button id="pag-anterior-novedades" class="btn btn-secondary btn-sm" disabled>
+                    ← Anterior
+                </button>
+                <span id="pagina-actual-novedades" class="px-3 py-1 text-sm font-medium text-gray-700">
+                    Página 1
+                </span>
+                <button id="pag-siguiente-novedades" class="btn btn-secondary btn-sm">
+                    Siguiente →
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+                
+                <!-- SECCIÓN: GENERAR ENCUESTA (✅ REDISEÑADA) -->
+                <section id="generar-encuesta-section" class="app-section hidden">
+                    <!-- Header con fecha actual -->
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h2 class="text-2xl font-semibold text-gray-800">Clases Programadas para Hoy</h2>
+                            <p class="text-sm text-gray-500 mt-1" id="generar-encuesta-fecha"></p>
+                        </div>
+                        <button id="refresh-classes-button" class="btn btn-secondary">
+                            <i class="fas fa-sync-alt mr-2"></i> Actualizar
+                        </button>
+                    </div>
+
+                    <!-- Tabla de clases -->
+                    <div class="card overflow-hidden">
+                        <div id="scheduled-classes-table-container">
+                            <p class="p-6 text-center text-gray-500">Cargando clases programadas...</p>
+                        </div>
+                    </div>
+
+                    <!-- Modal para mostrar enlace generado -->
+                    <div id="enlace-modal" class="modal-overlay hidden">
+                        <div class="modal-content max-w-2xl">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-xl font-semibold text-gray-800">Enlace de Encuesta Generado</h3>
+                                <button id="close-enlace-modal" class="text-gray-400 hover:text-gray-600">
+                                    <i class="fas fa-times text-xl"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Info de la clase -->
+                            <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-xs text-gray-500 mb-1">Código de Aula</p>
+                                        <p class="text-sm font-medium text-gray-900" id="modal-aula-codigo"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-500 mb-1">Docente</p>
+                                        <p class="text-sm font-medium text-gray-900" id="modal-docente-nombre"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-500 mb-1">Sesión</p>
+                                        <p class="text-sm font-medium text-gray-900" id="modal-sesion-num"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs text-gray-500 mb-1">Horario</p>
+                                        <p class="text-sm font-medium text-gray-900" id="modal-horario"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Enlace -->
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Enlace Único de Encuesta
+                                    <span class="text-gray-500 font-normal">(Expira 4 horas después del fin de la clase)</span>
+                                </label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="modal-link-input" class="flex-1 font-mono text-sm" readonly>
+                                    <button id="modal-copy-button" class="btn btn-primary">
+                                        <i class="fas fa-copy mr-2"></i> Copiar
+                                    </button>
+                                    <div id="modal-expiration-info"></div>
+                                </div>
+                            </div>
+
+                            <!-- Botones -->
+                            <div class="flex justify-end gap-3 mt-6">
+                                <button id="modal-close-button" class="btn btn-secondary">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+<!-- SECCIÓN: EVALUACIÓN CALIDAD -->
+<section id="evaluacion-calidad-section" class="app-section hidden">
+    
+    <!-- Botón Nueva Evaluación -->
+    <div class="flex justify-end mb-4">
+        <button id="show-evaluacion-form-button" class="btn btn-primary">
+            <i class="fas fa-plus mr-2"></i> Nueva Evaluación
+        </button>
+    </div>
+
+    <!-- Formulario de Nueva Evaluación -->
+    <div id="new-evaluacion-form-container" class="card p-6 md:p-8 mb-6 hidden">
+        <h2 class="text-xl font-semibold text-gray-800 mb-6">Nueva Evaluación de Calidad</h2>
+        <form id="new-evaluacion-form">
+            
+            <!-- Sección 1: Identificación -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+                <h3 class="text-base font-semibold text-blue-900 mb-4">🔍 Identificación de la Clase</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="eval_aula_select" class="form-label">Código de Aula</label>
+                        <select id="eval_aula_select" name="eval_aula_select" required>
+                            <option value="">-- Selecciona un aula --</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="eval_fecha_clase" class="form-label">Fecha de la Clase Evaluada</label>
+                        <input type="date" id="eval_fecha_clase" name="eval_fecha_clase" required>
+                    </div>
+                </div>
+                
+                <!-- Info Auto-llenada -->
+                <div id="eval_info_container" class="hidden mt-4 p-4 bg-white border border-blue-300 rounded-lg">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                        <div>
+                            <span class="text-gray-600">Sesión:</span>
+                            <span id="eval_info_sesion" class="font-semibold ml-2">-</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-600">Docente:</span>
+                            <span id="eval_info_docente" class="font-semibold ml-2">-</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-600">Frecuencia:</span>
+                            <span id="eval_info_frecuencia" class="font-semibold ml-2">-</span>
+                        </div>
+                    </div>
+                    <button type="button" id="btn_ver_ultima_eval" class="btn btn-secondary btn-sm mt-3">
+                        📊 Ver última evaluación de este docente
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Sección 2: Criterios de Evaluación -->
+            <div class="card mb-6">
+                <h3 class="text-base font-semibold text-gray-900 mb-4">⭐ Criterios de Evaluación</h3>
+                
+                <!-- Criterio de la Clase -->
+                <div class="mb-4">
+                    <label class="form-label">Criterio de la Clase</label>
+                    <div class="flex gap-4">
+                        <label class="flex items-center">
+                            <input type="radio" name="criterio_clase" value="Mal" required class="mr-2">
+                            <span>Mal</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="criterio_clase" value="Normal" required class="mr-2">
+                            <span>Normal</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="criterio_clase" value="Perfecto" required class="mr-2">
+                            <span>Perfecto</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Interacción fuera de clase -->
+                <div class="mb-4">
+                    <label class="form-label">Interacción fuera de clase (WhatsApp)</label>
+                    <div class="flex gap-4">
+                        <label class="flex items-center">
+                            <input type="radio" name="interaccion_fuera_clase" value="Baja" required class="mr-2">
+                            <span>Baja</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="interaccion_fuera_clase" value="Media" required class="mr-2">
+                            <span>Media</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="interaccion_fuera_clase" value="Alta" required class="mr-2">
+                            <span>Alta</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Atención -->
+                <div class="mb-4">
+                    <label class="form-label">Atención</label>
+                    <div class="flex gap-4">
+                        <label class="flex items-center">
+                            <input type="radio" name="atencion" value="Sin inconvenientes" required class="mr-2">
+                            <span>Sin inconvenientes</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="atencion" value="Hubo inconvenientes" required class="mr-2">
+                            <span>Hubo inconvenientes</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Asistencia -->
+                <div class="mb-4">
+                    <label for="eval_asistencia" class="form-label">Asistencia (0-25 alumnos)</label>
+                    <input type="number" id="eval_asistencia" name="eval_asistencia" min="0" max="25" required placeholder="Ej: 18">
+                </div>
+                
+                <!-- Calificación con Estrellas -->
+                <div class="mb-4">
+                    <label class="form-label">Calificación del Docente</label>
+                    <div class="flex gap-2 items-center">
+                        <div id="eval_estrellas_container" class="flex gap-1">
+                            <span class="star-eval cursor-pointer text-4xl text-gray-300" data-rating="1">★</span>
+                            <span class="star-eval cursor-pointer text-4xl text-gray-300" data-rating="2">★</span>
+                            <span class="star-eval cursor-pointer text-4xl text-gray-300" data-rating="3">★</span>
+                            <span class="star-eval cursor-pointer text-4xl text-gray-300" data-rating="4">★</span>
+                            <span class="star-eval cursor-pointer text-4xl text-gray-300" data-rating="5">★</span>
+                        </div>
+                        <span id="eval_rating_text" class="text-sm text-gray-600 ml-2">Selecciona una calificación</span>
+                    </div>
+                    <input type="hidden" id="eval_calificacion_input" name="calificacion_docente" required>
+                </div>
+                
+                <!-- Ejecución Clase -->
+                <div class="mb-4">
+                    <label for="eval_ejecucion_clase" class="form-label">Ejecución de Clase</label>
+                    <select id="eval_ejecucion_clase" name="eval_ejecucion_clase" required>
+                        <option value="">-- Selecciona --</option>
+                        <option value="Clase Normal">Clase Normal</option>
+                        <option value="Con Docente Reemplazo">Con Docente Reemplazo</option>
+                        <option value="Clase Reprogramada">Clase Reprogramada</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Sección 3: Observaciones -->
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-6">
+                <h3 class="text-base font-semibold text-gray-900 mb-4">📝 Observaciones</h3>
+                <label for="eval_observacion" class="form-label">Observación</label>
+                <textarea id="eval_observacion" name="eval_observacion" rows="4" placeholder="Escribe tus observaciones sobre la clase..."></textarea>
+            </div>
+            
+            <!-- Botones y Error -->
+            <div class="flex items-center justify-end gap-4">
+                <p id="form-evaluacion-error" class="text-sm text-red-600 mr-auto"></p>
+                <button type="button" id="cancel-evaluacion-form-button" class="btn btn-secondary">Cancelar</button>
+                <button type="submit" id="save-evaluacion-button" class="btn btn-primary">Guardar Evaluación</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabla de Evaluaciones -->
+    <div class="card overflow-hidden">
+        <div class="flex items-center justify-between p-4 border-b">
+            <h3 class="text-lg font-semibold text-gray-900">Historial de Evaluaciones</h3>
+            <div class="flex gap-3">
+                <select id="filtro-docente-eval" class="text-sm rounded-md border-gray-300">
+                    <option value="">Todos los docentes</option>
+                </select>
+                <input type="date" id="filtro-fecha-eval" class="text-sm rounded-md border-gray-300">
+                <button id="reset-filtros-eval" class="btn btn-secondary btn-sm">Limpiar</button>
+            </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <div id="evaluaciones-table-container">
+                <p class="p-6 text-center text-gray-500">Cargando evaluaciones...</p>
+            </div>
+        </div>
+        
+        <!-- Paginación -->
+        <div id="eval-paginacion-container" class="hidden p-4 border-t">
+            <div class="flex items-center justify-between">
+                <div class="text-sm text-gray-600">
+                    Mostrando <span id="eval-inicio">1</span>-<span id="eval-fin">20</span> 
+                    de <span id="eval-total">0</span> evaluaciones
+                </div>
+                <div class="flex gap-2">
+                    <button id="pag-anterior-eval" class="btn btn-secondary btn-sm" disabled>← Anterior</button>
+                    <span id="pagina-actual-eval" class="px-3 py-1 text-sm font-medium text-gray-700">Página 1</span>
+                    <button id="pag-siguiente-eval" class="btn btn-secondary btn-sm">Siguiente →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Última Evaluación -->
+    <div id="ultima-eval-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold">Última Evaluación del Docente</h3>
+                <button type="button" id="close-ultima-eval-modal" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+            </div>
+            <div id="ultima-eval-content" class="space-y-3">
+                <!-- Se llenará dinámicamente -->
+            </div>
+            <div class="mt-6 text-right">
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('ultima-eval-modal').classList.add('hidden')">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- SECCIÓN: ANÁLISIS DE DOCENTES -->
+<section id="analisis-docentes-section" class="app-section hidden">
+    
+    <!-- Header con filtros -->
+    <div class="card mb-6">
+        <div class="flex flex-col md:flex-row md:items-end gap-4">
+            <div class="flex-1">
+                <label for="analisis-docente-select" class="form-label">Seleccionar Docente</label>
+                <select id="analisis-docente-select" class="w-full">
+                    <option value="">-- Cargando docentes... --</option>
+                </select>
+            </div>
+            
+            <div class="flex-1">
+                <label for="analisis-mes-select" class="form-label">Filtrar por Mes</label>
+                <select id="analisis-mes-select" class="w-full">
+                    <option value="">Todos los meses</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+<!-- Resumen Global del Docente -->
+<div id="resumen-global-container" class="hidden card mb-6">
+    <div class="flex items-center justify-between mb-4">
+        <h3 class="text-base font-semibold text-gray-900">
+            📈 Resumen Global
+        </h3>
+        <span class="text-xs text-gray-500">Todos los periodos</span>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="flex flex-col">
+            <div class="text-sm text-gray-600 mb-1">Promedio General</div>
+            <div class="text-3xl font-bold text-gray-900" id="resumen-promedio">--</div>
+        </div>
+        
+        <div class="flex flex-col">
+            <div class="text-sm text-gray-600 mb-1">Total Evaluaciones</div>
+            <div class="text-3xl font-bold text-gray-900" id="resumen-total">--</div>
+        </div>
+        
+        <div class="flex flex-col">
+            <div class="text-sm text-gray-600 mb-1">Periodo Activo</div>
+            <div class="text-3xl font-bold text-gray-900" id="resumen-periodo">--</div>
+        </div>
+    </div>
+</div>
+    
+    <!-- Tabs de contenido -->
+    <div id="analisis-tabs-container" class="hidden">
+        <div class="border-b border-gray-200 mb-6">
+            <nav class="flex space-x-8" aria-label="Tabs">
+                <button id="tab-evaluaciones" class="analisis-tab tab-active border-b-2 border-red-600 py-4 px-1 text-sm font-medium text-red-600">
+                    📊 Evaluaciones de Calidad
+                </button>
+                <button id="tab-comentarios" class="analisis-tab border-b-2 border-transparent py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                    💬 Comentarios de Estudiantes
+                </button>
+                        <button id="tab-graficos" class="analisis-tab border-b-2 border-transparent py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+            📈 Gráficos y Tendencias
+        </button>
+            </nav>
+        </div>
+        
+        <!-- Contenido Tab: Evaluaciones de Calidad -->
+        <div id="content-evaluaciones" class="tab-content">
+            <div class="card">
+                <h3 class="text-base font-semibold text-gray-900 mb-4">Evaluaciones del Área de Calidad</h3>
+                <div id="evaluaciones-calidad-container">
+                    <p class="text-center text-gray-500 py-4">Selecciona un docente para ver sus evaluaciones</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contenido Tab: Comentarios -->
+        <div id="content-comentarios" class="tab-content hidden">
+            <div class="card">
+                <h3 class="text-base font-semibold text-gray-900 mb-4">Comentarios de Encuestas Públicas</h3>
+                <div id="comentarios-estudiantes-container">
+                    <p class="text-center text-gray-500 py-4">Selecciona un docente para ver comentarios</p>
+                </div>
+                
+                <!-- Paginación de comentarios -->
+                <div id="comentarios-paginacion" class="hidden mt-6 flex items-center justify-between border-t pt-4">
+                    <div class="text-sm text-gray-600">
+                        Mostrando <span id="comentarios-inicio">1</span>-<span id="comentarios-fin">20</span> 
+                        de <span id="comentarios-total">0</span> comentarios
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <button id="comentarios-pag-anterior" class="btn btn-secondary btn-sm" disabled>
+                            ← Anterior
+                        </button>
+                        <span id="comentarios-pagina-actual" class="px-3 py-1 text-sm font-medium text-gray-700">
+                            Página 1
+                        </span>
+                        <button id="comentarios-pag-siguiente" class="btn btn-secondary btn-sm">
+                            Siguiente →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+ 
+        <!-- Contenido Tab: Gráficos -->
+<div id="content-graficos" class="tab-content hidden">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Gráfico 1: Evolución Mensual -->
+        <div class="card">
+            <h3 class="text-base font-semibold text-gray-900 mb-4">
+                📈 Evolución del Promedio Mensual
+            </h3>
+            <div class="relative" style="height: 300px;">
+                <canvas id="chart-evolucion"></canvas>
+            </div>
+            <p class="text-xs text-gray-500 mt-3 text-center">
+                Promedio de calificaciones por mes (últimos 6 meses)
+            </p>
+        </div>
+        
+        <!-- Gráfico 2: Distribución de Calificaciones -->
+        <div class="card">
+            <h3 class="text-base font-semibold text-gray-900 mb-4">
+                📊 Distribución de Calificaciones
+            </h3>
+            <div class="relative" style="height: 300px;">
+                <canvas id="chart-distribucion"></canvas>
+            </div>
+            <p class="text-xs text-gray-500 mt-3 text-center">
+                Frecuencia de cada calificación recibida
+            </p>
+        </div>
+        
+    </div>
+    
+    <!-- Nota informativa -->
+    <div class="card mt-6 bg-blue-50 border-blue-200">
+        <div class="flex items-start">
+            <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd"/>
+            </svg>
+            <div class="text-sm text-blue-800">
+                <p class="font-medium mb-1">Sobre estos gráficos:</p>
+                <ul class="list-disc list-inside space-y-1 text-blue-700">
+                    <li>Los datos provienen de las <strong>encuestas públicas</strong> completadas por estudiantes</li>
+                    <li>Se actualizan automáticamente al seleccionar un docente o filtrar por mes</li>
+                    <li>Si no hay suficientes datos, los gráficos pueden aparecer vacíos</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+        
+    </div>
+    
+    <!-- Estado sin selección -->
+    <div id="sin-seleccion-state" class="card text-center py-12">
+        <i class="fas fa-user-graduate text-6xl text-gray-300 mb-4"></i>
+        <p class="text-gray-500 text-lg">Selecciona un docente para ver su análisis completo</p>
+    </div>
+    
+</section>
+
+            </div> <!-- /fin .flex-1.overflow-y-auto -->
+            
+        </main> <!-- /fin .flex-1.flex.flex-col -->
+        
+    </div> <!-- /fin .flex.h-screen -->
+
+    <!-- ✅ NUEVO: Modal para Cerrar Aula (ENTREGA 3) -->
+    <div id="cerrar-aula-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-lg shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-red-700">⚠️ Cerrar Aula</h3>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                    <p class="text-sm text-yellow-800">
+                        <strong>Advertencia:</strong> Esta acción moverá el aula a histórico y no se puede deshacer.
+                    </p>
+                </div>
+                
+                <div class="p-4 bg-gray-50 rounded-md">
+                    <p class="text-sm text-gray-700 mb-2">
+                        <strong>Aula:</strong> <span id="cerrar-aula-nombre" class="font-mono"></span>
+                    </p>
+                    <p class="text-sm text-gray-700">
+                        <strong>Sesiones totales:</strong> <span id="cerrar-aula-sesiones"></span>
+                    </p>
+                </div>
+                
+                <div>
+                    <label for="cerrar-aula-confirm-input" class="form-label">
+                        Para confirmar, escribe <strong class="text-red-600">CERRAR</strong> en el campo:
+                    </label>
+                    <input 
+                        type="text" 
+                        id="cerrar-aula-confirm-input" 
+                        class="uppercase"
+                        placeholder="Escribe CERRAR"
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <input type="hidden" id="cerrar-aula-id-hidden">
+                
+                <p id="cerrar-aula-error" class="text-sm text-red-600"></p>
+            </div>
+            
+            <div class="flex items-center justify-end gap-4 mt-6">
+                <button type="button" id="cerrar-aula-cancel-button" class="btn btn-secondary">
+                    Cancelar
+                </button>
+                <button type="button" id="cerrar-aula-confirm-button" class="btn bg-red-600 text-white hover:bg-red-700" disabled>
+                    Cerrar Aula
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ✅ NUEVO: Modal para Avanzar Ciclo (ENTREGA 3) -->
+    <div id="avanzar-ciclo-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-green-700">🔄 Avanzar al Siguiente Ciclo</h3>
+            </div>
+            
+            <form id="avanzar-ciclo-form">
+                <div class="space-y-4">
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
+                        <p class="text-sm text-blue-800">
+                            <strong>Nota:</strong> El ciclo anterior se archivará automáticamente en el histórico. 
+                            Se generarán nuevas sesiones para el siguiente ciclo.
+                        </p>
+                    </div>
+                    
+                    <!-- Ciclo Nuevo (readonly) -->
+                    <div>
+                        <label for="avanzar-ciclo-nuevo" class="form-label">
+                            Ciclo Nuevo (Auto-calculado)
+                        </label>
+                        <input 
+                            type="text" 
+                            id="avanzar-ciclo-nuevo" 
+                            readonly
+                            class="bg-gray-100 cursor-not-allowed"
+                        >
+                    </div>
+                    
+                    <!-- Grid de campos editables -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Docente -->
+                        <div class="md:col-span-2">
+                            <label for="avanzar-docente-select" class="form-label">
+                                Docente Asignado
+                            </label>
+                            <select id="avanzar-docente-select" required></select>
+                        </div>
+                        
+                        <!-- Fecha Inicio -->
+                        <div>
+                            <label for="avanzar-fecha-inicio" class="form-label">
+                                Fecha de Inicio
+                            </label>
+                            <input type="date" id="avanzar-fecha-inicio" required>
+                        </div>
+                        
+                        <!-- Fecha Fin (opcional, se calcula automáticamente) -->
+                        <div>
+                            <label for="avanzar-fecha-fin" class="form-label">
+                                Fecha de Fin <span class="text-xs text-gray-500">(se calcula automático)</span>
+                            </label>
+                            <input type="date" id="avanzar-fecha-fin" readonly class="bg-gray-100">
+                        </div>
+                        
+                        <!-- Horario Inicio -->
+                        <div>
+                            <label for="avanzar-horario-inicio" class="form-label">
+                                Hora de Inicio
+                            </label>
+                            <input type="time" id="avanzar-horario-inicio" required>
+                        </div>
+                        
+                        <!-- Horario Fin -->
+                        <div>
+                            <label for="avanzar-horario-fin" class="form-label">
+                                Hora de Fin
+                            </label>
+                            <input type="time" id="avanzar-horario-fin" required>
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="avanzar-aula-id-hidden">
+                    
+                    <p id="avanzar-ciclo-error" class="text-sm text-red-600"></p>
+                </div>
+                
+                <div class="flex items-center justify-end gap-4 mt-6">
+                    <button type="button" id="avanzar-ciclo-cancel-button" class="btn btn-secondary">
+                        Cancelar
+                    </button>
+                    <button type="submit" id="avanzar-ciclo-confirm-button" class="btn bg-green-600 text-white hover:bg-green-700">
+                        Avanzar al Ciclo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<!-- EmailJS SDK -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="text/javascript">
+   (function(){
+      emailjs.init("vtMKHdbbA6K2kjHc4"); // ⚠️ REEMPLAZAR
+   })();
+</script>
+
+<!-- Scripts -->
+<script type="module" src="js/admin-dashboard.js"></script>
+
+</body>
+</html>

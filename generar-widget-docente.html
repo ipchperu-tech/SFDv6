@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-gray-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Widget Docente - SFD</title>
+    
+    <link rel="icon" href="https://ipch.net.pe/wp-content/uploads/2025/07/IPCH-VERTICAL-V1-COLOR.png" sizes="any">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/style.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="h-full loading">
+    
+    <div class="min-h-full">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <img class="h-10 w-auto" src="https://ipch.net.pe/wp-content/uploads/2025/07/IPCH-VERTICAL-V1-COLOR.png" alt="Logo IPCH">
+                        <h1 class="ml-4 text-xl font-semibold text-gray-900">Generador de Widget Docente</h1>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <a href="dashboard_admin.html" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left mr-2"></i> Volver al Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            
+            <!-- Instrucciones -->
+            <div class="card mb-6 bg-blue-50 border-blue-200">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-6 w-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-blue-900 mb-2">📋 Instrucciones de Uso</h3>
+                        <ol class="text-sm text-blue-800 space-y-1 list-decimal list-inside">
+                            <li>Selecciona un docente del dropdown</li>
+                            <li>Se generará automáticamente el código iframe</li>
+                            <li>Haz clic en "Copiar Código" y pégalo en el campus virtual</li>
+                            <li>El widget mostrará las calificaciones del docente seleccionado</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Selector de Docente -->
+            <div class="card">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                    <i class="fas fa-user-graduate mr-2 text-red-600"></i>
+                    Paso 1: Selecciona un Docente
+                </h2>
+                
+                <div class="mb-6">
+                    <label for="docente-select" class="form-label">Docente</label>
+                    <select id="docente-select" class="w-full">
+                        <option value="">-- Cargando docentes... --</option>
+                    </select>
+                </div>
+                
+                <!-- Vista Previa del Widget -->
+                <div id="preview-section" class="hidden">
+                    <h3 class="text-base font-semibold text-gray-900 mb-3">
+                        <i class="fas fa-eye mr-2 text-blue-600"></i>
+                        Vista Previa
+                    </h3>
+                    
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
+                        <iframe 
+                            id="widget-preview" 
+                            width="100%" 
+                            height="120" 
+                            frameborder="0"
+                            style="border-radius: 8px;">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Código Generado -->
+            <div id="code-section" class="hidden card">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                    <i class="fas fa-code mr-2 text-green-600"></i>
+                    Paso 2: Código para Embeber
+                </h2>
+                
+                <div class="bg-gray-900 rounded-lg p-4 mb-4">
+                    <code id="generated-code" class="text-sm text-green-400 font-mono block whitespace-pre-wrap break-all"></code>
+                </div>
+                
+                <div class="flex items-center space-x-3">
+                    <button id="copy-code-button" class="btn btn-primary">
+                        <i class="fas fa-copy mr-2"></i> Copiar Código
+                    </button>
+                    
+                    <div id="copy-success" class="hidden flex items-center text-green-600">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-sm font-medium">¡Código copiado!</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="js/generar-widget-docente.js"></script>
+</body>
+</html>
