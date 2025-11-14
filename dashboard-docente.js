@@ -217,17 +217,18 @@ async function inicializarFormularios() {
 }
 
 /**
- * ✅ NUEVO: Verifica si el reporte mensual está habilitado
+ * ✅ CORREGIDO: Verifica si el reporte mensual está habilitado
  */
 async function verificarReporteHabilitado() {
     try {
         const configRef = doc(db, REPORTE_CONFIG.COLLECTION, REPORTE_CONFIG.DOC_ID);
         
-        // Escuchar cambios en tiempo real (sin caché)
+        // Escuchar cambios en tiempo real
         onSnapshot(configRef, (docSnap) => {
             if (docSnap.exists()) {
                 const config = docSnap.data();
-                const habilitado = config.activo === true;
+                // ✅ Usar el campo 'habilitado' de Firestore
+                const habilitado = config.habilitado === true;
                 
                 if (habilitado) {
                     elements.btnReporte?.classList.remove('hidden');
@@ -239,11 +240,15 @@ async function verificarReporteHabilitado() {
             } else {
                 // Si no existe el documento, ocultar botón
                 elements.btnReporte?.classList.add('hidden');
+                console.warn('⚠️ No existe el documento de configuración de reporte');
             }
+        }, (error) => {
+            console.error('❌ Error escuchando configuración:', error);
+            elements.btnReporte?.classList.add('hidden');
         });
         
     } catch (error) {
-        console.error('Error verificando reporte:', error);
+        console.error('❌ Error verificando reporte:', error);
         elements.btnReporte?.classList.add('hidden');
     }
 }
@@ -323,16 +328,15 @@ async function enviarReemplazo(e) {
                 document.getElementById('reemplazo-periodo').value
             ),
             motivo: document.getElementById('reemplazo-motivo').value,
-            timestamp: Timestamp.now()
         };
         
         // Guardar en Firestore
         await addDoc(collection(db, 'sfd_formularios_docentes', 'reemplazos', 'registros'), formData);
         
         // Enviar email con EmailJS
-        await emailjs.send(
-            'service_lnxen1x',
-            'template_reemplazo_docente', // ⚠️ Debes crear este template
+await emailjs.send(
+    'service_lnxen1x',
+    'noti_reemplazo',
             {
                 fecha_actual: formData.fecha_actual,
                 docente: formData.docente,
@@ -403,16 +407,15 @@ async function enviarReprogramacion(e) {
                 document.getElementById('reprog-periodo').value
             ),
             motivo: document.getElementById('reprog-motivo').value,
-            timestamp: Timestamp.now()
         };
         
         // Guardar en Firestore
         await addDoc(collection(db, 'sfd_formularios_docentes', 'reprogramaciones', 'registros'), formData);
         
         // Enviar email con EmailJS
-        await emailjs.send(
-            'service_lnxen1x',
-            'template_reprogramacion_docente', // ⚠️ Debes crear este template
+await emailjs.send(
+    'service_lnxen1x',
+    'noti_reprogramacion',
             {
                 fecha_actual: formData.fecha_actual,
                 docente: formData.docente,
@@ -588,8 +591,7 @@ async function enviarReporte(e) {
             reprogramaciones_cantidad: document.getElementById('reporte-reprogramaciones-cantidad').value || '0',
             conclusiones: document.getElementById('reporte-conclusiones').value,
             recomendaciones: document.getElementById('reporte-recomendaciones').value,
-            firma_base64: firmaBase64,
-            timestamp: Timestamp.now()
+            firma_base64: firmaBase64
         };
         
         // Guardar en Firestore
@@ -599,9 +601,9 @@ async function enviarReporte(e) {
         const aulasTexto = aulas.map((a, i) => `${i + 1}. ${a.codigo} (${a.asistencia})`).join('\n');
         
         // Enviar email con EmailJS
-        await emailjs.send(
-            'service_DIFERENTE', // ⚠️ Service ID diferente según tu instrucción
-            'template_reporte_mensual_docente', // ⚠️ Debes crear este template
+await emailjs.send(
+    'service_lnxen1x', 
+    'noti_reporte',
             {
                 fecha_actual: formData.fecha_actual,
                 docente: formData.docente,

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido - Redirigiendo...</title>
+    
+    <meta http-equiv="refresh" content="3;url=https://feed.ipch.net.pe/login.html">
+    
+    <link rel="icon" href="https://ipch.net.pe/wp-content/uploads/2025/07/IPCH-VERTICAL-V1-COLOR.png">
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f9f9f9;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .logo {
+            max-width: 250px;
+            margin-bottom: 2rem;
+        }
+        
+        .message {
+            font-size: 1.2rem;
+            color: #333;
+        }
+        
+        /* Estilo para el número del contador */
+        #countdown {
+            font-weight: bold;
+            color: #0056b3; /* Un color para destacar el número */
+        }
+    </style>
+</head>
+<body>
+
+    <img src="https://ipch.net.pe/wp-content/uploads/2025/07/IPCH-VERTICAL-V1-COLOR.png" alt="Logo IPCH" class="logo">
+    
+    <p class="message">
+        Bienvenido al sistema de Feed back.
+        <br>
+        Serás redirigido al login en 
+        <span id="countdown">3</span> 
+        segundos.
+    </p>
+
+    <script>
+        (function() {
+            // URL de destino
+            var targetUrl = "https://feed.ipch.net.pe/login.html";
+            
+            // Segundos iniciales
+            var timeLeft = 3; 
+
+            // Elemento <span> donde mostraremos el número
+            var countdownElement = document.getElementById('countdown');
+
+            // Función que se ejecuta cada segundo
+            var timer = setInterval(function() {
+                
+                // Restamos un segundo
+                timeLeft--; 
+                
+                // Actualizamos el número en la pantalla
+                countdownElement.innerHTML = timeLeft;
+
+                // Cuando el tiempo llega a 0
+                if (timeLeft <= 0) {
+                    clearInterval(timer); // Detenemos el contador
+                    window.location.href = targetUrl; // Redirigimos al usuario
+                }
+                
+            }, 1000); // 1000 milisegundos = 1 segundo
+        })();
+    </script>
+
+</body>
+</html>
